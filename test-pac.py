@@ -2,6 +2,9 @@ import argparse
 import csv
 import pacparser
 import sys
+from urlparse import urlparse
+
+v_print = lambda *a: None
 
 def main():
     # Commandline arguments
@@ -12,7 +15,20 @@ def main():
     parser.add_argument('-f', '--testfile', metavar='FILE', type=str,
             default='test-data.csv',
             help="Path to CSV test data file.")
+    parser.add_argument('-v', '--verbosity', action="count",
+            help="increase output verbosity")
     args = parser.parse_args()
+
+    # Set up v_print function for verbose output
+    if args.verbosity:
+        def _v_print(*verb_args):
+            if verb_args[0] > (3 - args.verbosity):
+                print(verb_args[1])
+    else:
+        _v_print = lambda *a: None  # do-nothing function
+
+    global v_print
+    v_print = _v_print
 
     testpassed = 0
 
@@ -23,26 +39,27 @@ def main():
     pacparser.parse_pac(args.pacfile.lstrip())
 
     with open(args.testfile.lstrip(), 'rt') as f:
-        reader = csv.reader(f, delimiter=',')
-        for line in reader:
-            host = line[0]
-            expected = line[1]
+        # Create csv reader, filtering out rows starting with '#'
+        reader = csv.DictReader(filter(lambda row: row[0]!='#', f), delimiter=',')
 
-            #print("read line: {} {}".format(host, expected))
+        for row in reader:
+            v_print(1, "read row: {} {}".format(row['url'], row['expected']))
 
             result = pacparser.find_proxy(
-                "http://{}".format(host),
-                host
+                row['url'],
+                urlparse(row['url']).hostname
             )
 
-            #print("result: {}".format(result))
+            v_print(1, "result: {}".format(result))
 
             # Compare result and output
-            if(result == expected):
-                print("OK   - {}".format(host))
+            if(result == row['expected']):
+                print("OK   - {}".format(row['url']))
             else:
                 testpassed = 1
-                print("FAIL - {}".format(host))
+                print("FAIL - {}".format(row['url']))
+
+            v_print(1, "")
 
     # Cleanup pacparser
     pacparser.cleanup()

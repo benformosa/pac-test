@@ -1,7 +1,8 @@
-example.com,PROXY proxy:8080
-a.example.com,DIRECT
-b.example.com,DIRECT
-host.example.net,DIRECT
-example.net,PROXY proxy:8080
-192.168.0.1,DIRECT
-192.0.0.1,PROXY proxy:8080
+url,expected
+http://example.com,PROXY proxy:8080
+http://a.example.com,DIRECT
+http://b.example.com,DIRECT
+http://host.example.net,DIRECT
+http://example.net,PROXY proxy:8080
+http://192.168.0.1,DIRECT
+http://192.0.0.1,PROXY proxy:8080

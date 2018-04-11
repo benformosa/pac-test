@@ -3,6 +3,8 @@ import csv
 import pblparser
 import sys
 
+v_print = lambda *a: None
+
 def main():
     # Commandline arguments
     parser = argparse.ArgumentParser()
@@ -15,7 +17,20 @@ def main():
     parser.add_argument('-s', '--proxystring', metavar='STRING', type=str,
             default='PROXY proxy:8080',
             help="String to return when proxy is set")
+    parser.add_argument('-v', '--verbosity', action="count",
+            help="increase output verbosity")
     args = parser.parse_args()
+
+    # Set up v_print function for verbose output
+    if args.verbosity:
+        def _v_print(*verb_args):
+            if verb_args[0] > (3 - args.verbosity):
+                print(verb_args[1])
+    else:
+        _v_print = lambda *a: None  # do-nothing function
+
+    global v_print
+    v_print = _v_print
 
     testpassed = 0
 
@@ -25,33 +40,28 @@ def main():
     pblparser.set_proxy(args.proxystring.lstrip())
     pblparser.parse_pbl(args.proxybypasss.lstrip())
 
-    # VERBOSE
-    # print(pblparser.get_pbl())
-    # print("")
+    v_print(3, pblparser.get_pbl())
+    v_print(3, "")
 
     with open(args.testfile.lstrip(), 'rt') as f:
-        reader = csv.reader(f, delimiter=',')
-        for line in reader:
-            host = line[0]
-            expected = line[1]
+        # Create csv reader, filtering out rows starting with '#'
+        reader = csv.DictReader(filter(lambda row: row[0]!='#', f), delimiter=',')
 
-            # VERBOSE
-            # print("read line: {} {}".format(host, expected))
+        for row in reader:
+            v_print(1, "read row: {} {}".format(row['url'], row['expected']))
 
-            result = pblparser.find_proxy(host)
+            result = pblparser.find_proxy(row['url'])
 
-            # VERBOSE
-            # print("result: {}".format(result))
+            v_print(1, "result: {}".format(result))
             
             # Compare result and output
-            if(result == expected):
-                print("OK   - {}".format(host))
+            if(result == row['expected']):
+                print("OK   - {}".format(row['url']))
             else:
                 testpassed = 1
-                print("FAIL - {}".format(host))
+                print("FAIL - {}".format(row['url']))
 
-            # VERBOSE
-            # print("")
+            v_print(1, "")
 
     if(testpassed):
         print("Test Failed")
