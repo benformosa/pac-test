@@ -1,17 +1,10 @@
-FROM python:3-jessie as pacparser
+FROM debian:jessie
 
-# Get pacparser from GitHub
-WORKDIR /usr/src/
-RUN git clone https://github.com/manugarg/pacparser.git
-
-WORKDIR /usr/src/pacparser
-
+# Install pacparser Python module
+# We use Debian's included version of Python, which can find this module
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    python-dev \
-    python-setuptools
-
-# Build pacparser
-RUN make -C src all pymod install-pymod
+        python-pacparser \
+    && rm -rf /var/lib/apt/lists/*
 
 COPY . .
 
