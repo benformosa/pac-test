@@ -1,14 +1,14 @@
 import argparse
 import csv
-import pelparser
+import pblparser
 import sys
 
 def main():
     # Commandline arguments
     parser = argparse.ArgumentParser()
-    parser.add_argument('-p', '--proxyexceptions', metavar='FILE', type=str,
-            default='proxy-exception-list.txt',
-            help="Path to proxy exception list to test")
+    parser.add_argument('-p', '--proxybypasss', metavar='FILE', type=str,
+            default='proxy-bypass-list.txt',
+            help="Path to proxy bypass list to test")
     parser.add_argument('-f', '--testfile', metavar='FILE', type=str,
             default='test-data.csv',
             help="Path to CSV test data file.")
@@ -19,14 +19,14 @@ def main():
 
     testpassed = 0
 
-    print("Testing Proxy Exception List: {}".format(args.proxyexceptions.lstrip()))
+    print("Testing Proxy Bypass List: {}".format(args.proxybypasss.lstrip()))
 
-    # Initialise pelparser
-    pelparser.set_proxy(args.proxystring.lstrip())
-    pelparser.parse_pel(args.proxyexceptions.lstrip())
+    # Initialise pblparser
+    pblparser.set_proxy(args.proxystring.lstrip())
+    pblparser.parse_pbl(args.proxybypasss.lstrip())
 
     # VERBOSE
-    # print(pelparser.get_pel())
+    # print(pblparser.get_pbl())
     # print("")
 
     with open(args.testfile.lstrip(), 'rt') as f:
@@ -38,7 +38,7 @@ def main():
             # VERBOSE
             # print("read line: {} {}".format(host, expected))
 
-            result = pelparser.find_proxy(host)
+            result = pblparser.find_proxy(host)
 
             # VERBOSE
             # print("result: {}".format(result))

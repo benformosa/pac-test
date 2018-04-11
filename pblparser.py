@@ -6,8 +6,8 @@ import sys
 this = sys.modules[__name__]
 
 def init():
-    # Proxy Exception List
-    this.__pel = []
+    # Proxy Bypass List
+    this.__pbl = []
     # Default proxy string
     this.__proxy = 'PROXY proxy:8080'
 
@@ -15,17 +15,17 @@ def set_proxy(proxy):
     """Update the proxy string to return"""
     this.__proxy = proxy
 
-def get_pel():
-    return this.__pel
+def get_pbl():
+    return this.__pbl
 
-def parse_pel(file):
-    """Import a proxy exception list from file"""
+def parse_pbl(file):
+    """Import a proxy bypass list from file"""
     with open(file, 'rt') as f:
-        this.__pel = f.read().strip().split(';')
+        this.__pbl = f.read().strip().split(';')
 
 def find_proxy(host):
     """Return the proxy configuration for a host"""
-    for pattern in this.__pel:
+    for pattern in this.__pbl:
         if(fnmatch.fnmatch(host, pattern)):
             # VERBOSE
             # print("host '{}' matched pattern: '{}'".format(host, pattern))
