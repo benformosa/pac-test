@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+"""Test output of pblparser against test data"""
+
 import argparse
 import csv
 import pblparser

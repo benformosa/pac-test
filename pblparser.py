@@ -1,6 +1,9 @@
+#!/usr/bin/env python3
+"""Test tool for Proxy Bypass lists, similar to pacparser"""
+
 import fnmatch
 import sys
-from urlparse import urlparse
+from urllib.parse import urlparse
 
 # Allows the module's variables to persist
 # See https://stackoverflow.com/a/35904211/813821
