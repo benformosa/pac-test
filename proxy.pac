@@ -3,7 +3,9 @@ function FindProxyForURL(url, host) {
     // If the hostname matches, send direct.
         if (
             dnsDomainIs(host, "host.example.net") ||
-            shExpMatch(host, "*.example.com")
+            shExpMatch(host, "*.example.com") ||
+            shExpMatch(host, "www.microsoft.*") ||
+            shExpMatch(host, "123.1*.66.*")
         )
             return "DIRECT";
 

@@ -1,8 +1,28 @@
 url,expected
+#
+# Test *.example.com
 http://example.com,PROXY proxy:8080
 http://a.example.com,DIRECT
 http://b.example.com,DIRECT
+#
+# Test host.example.net
 http://host.example.net,DIRECT
 http://example.net,PROXY proxy:8080
+#
+# Test 192.168.*.*
 http://192.168.0.1,DIRECT
 http://192.0.0.1,PROXY proxy:8080
+#
+# Test www.microsoft.*
+http://microsoft.com,PROXY proxy:8080
+http://www.microsoft.com,DIRECT
+http://www.microsoft.org,DIRECT
+# The mention of this URL in the documentation seems to be an error
+http://www.microsoftcorporation.com,PROXY proxy:8080
+#
+# Test 123.1*.66.*
+http://123.244.66.12,PROXY proxy:8080
+http://123.144.67.12,PROXY proxy:8080
+http://123.144.66.12,DIRECT
+http://123.133.66.15,DIRECT
+http://123.187.66.13,DIRECT
