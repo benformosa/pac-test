@@ -4,8 +4,6 @@ import pacparser
 import sys
 from urlparse import urlparse
 
-v_print = lambda *a: None
-
 def main():
     # Commandline arguments
     parser = argparse.ArgumentParser()
@@ -32,7 +30,7 @@ def main():
 
     testpassed = 0
 
-    print("Testing PAC file: {}".format(args.pacfile.lstrip()))
+    v_print(3, "Testing PAC file: {}".format(args.pacfile.lstrip()))
 
     # Initialise pacparser
     pacparser.init()
@@ -54,10 +52,10 @@ def main():
 
             # Compare result and output
             if(result == row['expected']):
-                print("OK   - {}".format(row['url']))
+                v_print(2, "OK   - {}".format(row['url']))
             else:
                 testpassed = 1
-                print("FAIL - {}".format(row['url']))
+                v_print(2, "FAIL - {}".format(row['url']))
 
             v_print(1, "")
 
@@ -65,9 +63,9 @@ def main():
     pacparser.cleanup()
 
     if(testpassed):
-        print("Test Failed")
+        v_print(3, "Test Failed")
     else:
-        print("Test Passed")
+        v_print(3, "Test Passed")
 
     # Set exit code based on test output
     sys.exit(testpassed)

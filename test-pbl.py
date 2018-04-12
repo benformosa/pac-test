@@ -3,8 +3,6 @@ import csv
 import pblparser
 import sys
 
-v_print = lambda *a: None
-
 def main():
     # Commandline arguments
     parser = argparse.ArgumentParser()
@@ -34,14 +32,14 @@ def main():
 
     testpassed = 0
 
-    print("Testing Proxy Bypass List: {}".format(args.proxybypasss.lstrip()))
+    v_print(3, "Testing Proxy Bypass List: {}".format(args.proxybypasss.lstrip()))
 
     # Initialise pblparser
     pblparser.set_proxy(args.proxystring.lstrip())
     pblparser.parse_pbl(args.proxybypasss.lstrip())
 
-    v_print(3, pblparser.get_pbl())
-    v_print(3, "")
+    v_print(1, pblparser.get_pbl())
+    v_print(1, "")
 
     with open(args.testfile.lstrip(), 'rt') as f:
         # Create csv reader, filtering out rows starting with '#'
@@ -56,17 +54,17 @@ def main():
             
             # Compare result and output
             if(result == row['expected']):
-                print("OK   - {}".format(row['url']))
+                v_print(2, "OK   - {}".format(row['url']))
             else:
                 testpassed = 1
-                print("FAIL - {}".format(row['url']))
+                v_print(2, "FAIL - {}".format(row['url']))
 
             v_print(1, "")
 
     if(testpassed):
-        print("Test Failed")
+        v_print(3, "Test Failed")
     else:
-        print("Test Passed")
+        v_print(3, "Test Passed")
 
     # Set exit code based on test output
     sys.exit(testpassed)
