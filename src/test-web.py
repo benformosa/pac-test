@@ -28,41 +28,57 @@ def main():
     global v_print
     v_print = _v_print
 
+    testfailed = test_web(args.testfile.lstrip())
+
+    # Set exit code based on test output
+    sys.exit(testfailed)
+
+def test_web(testfile):
+    """Test web connections against test data
+
+    Returns 0 if all tests pass, 1 if any fail"""
+
+    # Stores the script's exit code
     testfailed = 0
 
     v_print(3, "Testing web connections")
 
-    with open(args.testfile.lstrip(), 'rt') as f:
+    with open(testfile, 'rt') as f:
         # Create csv reader, filtering out rows starting with '#'
         reader = csv.DictReader(filter(lambda row: row[0]!='#', f), delimiter=',')
 
         for row in reader:
-            v_print(1, "read row: {} {}".format(row['url'], row['expected']))
-
-            try:
-                result = get_http_status_code(row['url'], get_proxy(row['expected']))
-            except:
-                v_print(1, "Error connecting to URL")
-                result = 'error'
-
-            v_print(1, "result: {}".format(result))
-            
-            # Compare result and output
-            if(result == requests.codes.ok):
-                v_print(2, "OK   - {}".format(row['url']))
-            else:
-                testfailed = 1
-                v_print(2, "FAIL - {}".format(row['url']))
-
-            v_print(1, "")
+            v_print(1, "\nread row: {} {}".format(row['url'], row['expected']))
+            testfailed = test_url(row['url'], row['expected'])
 
     if(testfailed):
         print("Web Test Failed", file=sys.stderr)
     else:
         v_print(3, "Web Test Passed")
 
-    # Set exit code based on test output
-    sys.exit(testfailed)
+    return testfailed
+
+def test_url(url, proxystring):
+    """Connect to a URL
+
+    Returns 0 if the test passes, 1 if it fails"""
+
+    # Attempt to connect to the URL
+    try:
+        result = get_http_status_code(url, get_proxy(proxystring))
+    except Exception as e:
+        v_print(1, "Error connecting to URL: {}".format(e))
+        result = 'error'
+
+    v_print(1, "result: {}".format(result))
+    
+    # Compare result
+    if(result == requests.codes.ok):
+        v_print(2, "OK   - {}".format(url))
+        return 0
+    else:
+        v_print(2, "FAIL - {}".format(url))
+        return 1
 
 def get_proxy(proxystring):
     """Convert a proxy string back into a host:port string"""
@@ -77,8 +93,8 @@ def get_proxy(proxystring):
     else:
         return ''
 
-def get_http_status_code(url, proxy):
-    """Retreives the status code of a url by requesting HEAD data"""
+def get_http_status_code(url, proxy=''):
+    """Retreives the status code of a url by requesting HEAD data. Uses the proxy if set."""
 
     proxies = {}
     if(proxy):
@@ -87,7 +103,7 @@ def get_http_status_code(url, proxy):
             'https': proxy,
         }
 
-    r = requests.get(url, proxies=proxies, timout=2)
+    r = requests.get(url, proxies=proxies, timeout=2)
     return r.status_code
 
 if __name__ == '__main__':

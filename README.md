@@ -4,11 +4,10 @@ pac-test is a set of tools for testing [proxy PAC files](https://en.wikipedia.or
 
 ## Getting Started
 
-Clone this project and replace the files `proxy.pac` and `proxy-bypass-list.txt` with your own proxy PAC file and Proxy Bypass list.
-
+Clone this project and replace the files `proxy.pac` and `proxy-bypass-list.txt` with your own proxy PAC file and Proxy Bypass list.  
 Replace the file `test-data.csv` with your test data. See [Test data file format](#test-data-file-format)
 
-Run `test.sh` to tests both PAC file and Proxy Bypass list.
+Run `test.sh` to run all tests.
 
 To build and run with Docker:
 
@@ -19,15 +18,22 @@ docker run --rm pac-test
 
 ## Running
 
-To test a PAC file, run `test-pac.py`. Run `test-pac.py` for available command line options.
+Each test can be run individually.
 
-To test a Proxy Bypass list, run `test-pbl.py`. Run `test-pbl.py` for available command line options.
+| Test | Script |
+|------|--------|
+| PAC file | `src/test-pac.py` |
+| Proxy Bypass list | `src/test-pbl.py` |
+| Web connectivity | `src/test-web.py` |
 
-## Prerequisites
+Use the `-h` argument on each script to see available command line options.
 
-Requires Python and the [pacparser](https://github.com/manugarg/pacparser) Python module.
+## Requirements
 
-Install pacparser with `pip install pacparser`, or on Debian with `apt-get install python-pacparser`
+Requires Python 3 with [pacparser](http://pacparser.manugarg.com/) and [requests](http://docs.python-requests.org/en/master/) modules.
+
+To install requirements with pip: `pip install -r requirements.txt`  
+To install requirements with apt on Debian: `apt-get install python3-pacparser python3-requests`
 
 ## Test data file format
 
@@ -51,7 +57,7 @@ http://example.net,PROXY proxy:8080
 
 ## Proxy Bypass list file format
 
-`pblparser.py` attempts to simulate the behaviour of Internet Explorer, asndocumented in Microsoft's Internet Explorer 5 Resource Kit: [Working with Proxy Servers](https://technet.microsoft.com/en-us/library/cc939852.aspx#EBAA)
+`pblparser.py` attempts to simulate the behaviour of Internet Explorer, as documented in Microsoft's Internet Explorer 5 Resource Kit: [Working with Proxy Servers](https://technet.microsoft.com/en-us/library/cc939852.aspx#EBAA)
 
 * A Proxy Bypass list file is made up of one or more Proxy Bypass entries, separated by semicolons (`;`).
 * A Proxy Bypass entry is a hostname or IP address
