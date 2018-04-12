@@ -31,7 +31,7 @@ def main():
     global v_print
     v_print = _v_print
 
-    testpassed = 0
+    testfailed = 0
 
     v_print(3, "Testing PAC file: {}".format(args.pacfile.lstrip()))
 
@@ -57,7 +57,7 @@ def main():
             if(result == row['expected']):
                 v_print(2, "OK   - {}".format(row['url']))
             else:
-                testpassed = 1
+                testfailed = 1
                 v_print(2, "FAIL - {}".format(row['url']))
 
             v_print(1, "")
@@ -65,13 +65,13 @@ def main():
     # Cleanup pacparser
     pacparser.cleanup()
 
-    if(testpassed):
-        v_print(3, "Test Failed")
+    if(testfailed):
+        print("PAC file Test Failed", file=sys.stderr)
     else:
-        v_print(3, "Test Passed")
+        v_print(3, "PAC file Test Passed")
 
     # Set exit code based on test output
-    sys.exit(testpassed)
+    sys.exit(testfailed)
 
 if __name__ == '__main__':
     main()

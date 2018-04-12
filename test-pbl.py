@@ -33,7 +33,7 @@ def main():
     global v_print
     v_print = _v_print
 
-    testpassed = 0
+    testfailed = 0
 
     v_print(3, "Testing Proxy Bypass List: {}".format(args.proxybypasss.lstrip()))
 
@@ -59,18 +59,18 @@ def main():
             if(result == row['expected']):
                 v_print(2, "OK   - {}".format(row['url']))
             else:
-                testpassed = 1
+                testfailed = 1
                 v_print(2, "FAIL - {}".format(row['url']))
 
             v_print(1, "")
 
-    if(testpassed):
-        v_print(3, "Test Failed")
+    if(testfailed):
+        print("Proxy Bypass list Test Failed", file=sys.stderr)
     else:
-        v_print(3, "Test Passed")
+        v_print(3, "Proxy Bypass list Test Passed")
 
     # Set exit code based on test output
-    sys.exit(testpassed)
+    sys.exit(testfailed)
 
 if __name__ == '__main__':
     main()

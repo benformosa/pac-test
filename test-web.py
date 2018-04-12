@@ -28,7 +28,7 @@ def main():
     global v_print
     v_print = _v_print
 
-    testpassed = 0
+    testfailed = 0
 
     v_print(3, "Testing web connections")
 
@@ -51,18 +51,18 @@ def main():
             if(result == requests.codes.ok):
                 v_print(2, "OK   - {}".format(row['url']))
             else:
-                testpassed = 1
+                testfailed = 1
                 v_print(2, "FAIL - {}".format(row['url']))
 
             v_print(1, "")
 
-    if(testpassed):
-        v_print(3, "Test Failed")
+    if(testfailed):
+        print("Web Test Failed", file=sys.stderr)
     else:
-        v_print(3, "Test Passed")
+        v_print(3, "Web Test Passed")
 
     # Set exit code based on test output
-    sys.exit(testpassed)
+    sys.exit(testfailed)
 
 def get_proxy(proxystring):
     """Convert a proxy string back into a host:port string"""
