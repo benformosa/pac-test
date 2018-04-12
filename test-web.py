@@ -30,6 +30,8 @@ def main():
 
     testpassed = 0
 
+    v_print(3, "Testing web connections")
+
     with open(args.testfile.lstrip(), 'rt') as f:
         # Create csv reader, filtering out rows starting with '#'
         reader = csv.DictReader(filter(lambda row: row[0]!='#', f), delimiter=',')
@@ -40,7 +42,7 @@ def main():
             try:
                 result = get_http_status_code(row['url'], get_proxy(row['expected']))
             except:
-                v_print(2, "Error connecting to URL")
+                v_print(1, "Error connecting to URL")
                 result = 'error'
 
             v_print(1, "result: {}".format(result))
@@ -85,7 +87,7 @@ def get_http_status_code(url, proxy):
             'https': proxy,
         }
 
-    r = requests.get(url, proxies=proxies)
+    r = requests.get(url, proxies=proxies, timout=2)
     return r.status_code
 
 if __name__ == '__main__':
