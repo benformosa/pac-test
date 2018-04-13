@@ -3,8 +3,9 @@
 
 import argparse
 import csv
-import pblparser
 import sys
+
+import pblparser
 
 def main():
     # Commandline arguments

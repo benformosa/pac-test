@@ -4,8 +4,9 @@
 from urllib.parse import urlparse
 import argparse
 import csv
-import requests
 import sys
+
+import requests
 
 def main():
     # Commandline arguments

@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 """Test output of pacparser against test data"""
 
+from urllib.parse import urlparse
 import argparse
 import csv
-import pacparser
 import sys
-from urllib.parse import urlparse
+
+import pacparser
 
 def main():
     # Commandline arguments
